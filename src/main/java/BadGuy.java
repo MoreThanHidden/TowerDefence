@@ -1,5 +1,3 @@
-package morethanhidden.td;
-
 public class BadGuy {
     int health = 10;
     int x;
