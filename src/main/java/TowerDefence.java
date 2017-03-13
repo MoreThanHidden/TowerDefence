@@ -39,7 +39,7 @@ public class TowerDefence {
         if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
         // Create the window
-        window = glfwCreateWindow(300, 300, "Hello Game!", NULL, NULL);
+        window = glfwCreateWindow(300, 300, "Tower Defence!", NULL, NULL);
 
         //Check the Window
         if ( window == NULL ) throw new RuntimeException("Failed to create the GLFW window");
@@ -67,6 +67,8 @@ public class TowerDefence {
                     (vidmode.width() - pWidth.get(0)) / 2,
                     (vidmode.height() - pHeight.get(0)) / 2
             );
+
+
         }
 
         // Make the OpenGL context current
@@ -79,16 +81,34 @@ public class TowerDefence {
 
     }
 
+    private void update(){
+
+        float UNIT = 0.1f;
+        for(int y = 0; y < 18; y++) {
+            for (int i = 0; i < 18; i ++) {
+
+                glBegin(GL_QUADS);
+                if(Maps.DefaultMap[i + (18 * y)] == 0){glColor4f(0.1f, 0.6f, 0.1f, 0.0f);}else{glColor4f(0.6f, 0.4f, 0.1f, 0.0f);}
+                glVertex2f(-0.8f + UNIT * i, 0.9f - (UNIT * y));
+                glVertex2f(-0.8f + UNIT * i, 0.8f - (UNIT * y));
+                glVertex2f(-0.9f + UNIT * i, 0.8f - (UNIT * y));
+                glVertex2f(-0.9f + UNIT * i, 0.9f - (UNIT * y));
+                glEnd();
+            }
+        }
+
+    }
+
     private void loop() {
         GL.createCapabilities();
-
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.5f, 0.6f, 0.9f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            update();
 
             glfwSwapBuffers(window); // swap the color buffers
 
