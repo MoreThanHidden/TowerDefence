@@ -1,6 +1,6 @@
 public class Tiles {
 
-    public static enum tiles{
+    public static enum TILES{
         GRASS,
         DIRT,
         STARTEND,

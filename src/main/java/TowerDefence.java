@@ -1,5 +1,6 @@
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
@@ -16,6 +17,7 @@ public class TowerDefence {
 
     // The window handle
     private long window;
+    Camera camera;
 
     public void run() {
 
@@ -58,6 +60,9 @@ public class TowerDefence {
             // Get the window size passed to glfwCreateWindow
             glfwGetWindowSize(window, pWidth, pHeight);
 
+            GLFWWindowSizeCallback callback = GLFWWindowSizeCallback.create(this::windowSizeCallback);
+            glfwSetWindowSizeCallback(window, callback);
+
             // Get the resolution of the primary monitor
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
@@ -67,7 +72,6 @@ public class TowerDefence {
                     (vidmode.width() - pWidth.get(0)) / 2,
                     (vidmode.height() - pHeight.get(0)) / 2
             );
-
 
         }
 
@@ -82,13 +86,13 @@ public class TowerDefence {
     }
 
     private void update(){
-
+        int size = 18;
         float UNIT = 0.1f;
-        for(int y = 0; y < 18; y++) {
-            for (int i = 0; i < 18; i ++) {
-
+        for(int y = 0; y < size; y++) {
+            for (int i = 0; i < size; i ++) {
+                int currentTile = Maps.DefaultMap[i + (18 * y)];
                 glBegin(GL_QUADS);
-                if(Maps.DefaultMap[i + (18 * y)] == 0){glColor4f(0.1f, 0.6f, 0.1f, 0.0f);}else{glColor4f(0.6f, 0.4f, 0.1f, 0.0f);}
+                if(currentTile == 0){glColor4f(0.1f, 0.6f, 0.1f, 0.0f);}else{glColor4f(0.6f, 0.4f, 0.1f, 0.0f);}
                 glVertex2f(-0.8f + UNIT * i, 0.9f - (UNIT * y));
                 glVertex2f(-0.8f + UNIT * i, 0.8f - (UNIT * y));
                 glVertex2f(-0.9f + UNIT * i, 0.8f - (UNIT * y));
@@ -102,12 +106,14 @@ public class TowerDefence {
     private void loop() {
         GL.createCapabilities();
         // Set the clear color
-        glClearColor(0.5f, 0.6f, 0.9f, 0.0f);
+        glClearColor(0.3f, 0.3f, 0.3f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+
             update();
 
             glfwSwapBuffers(window); // swap the color buffers
@@ -116,6 +122,11 @@ public class TowerDefence {
             // invoked during this call.
             glfwPollEvents();
         }
+    }
+
+    private void windowSizeCallback(long window, int width, int height){
+            //camera.setProjection(width, height);
+            glViewport(0, 0, width, height);
     }
 
 }
